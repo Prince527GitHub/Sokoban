@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Level Editor</title>
+</head>
+<body>
+
+    <div class="nav frosted">
+        <div class="center">
+            <button class="button selected" onclick="setObject('█', 'wall')" id="wall"><img class="invert" src="./img/tiles/wall.png"></button>
+            <button class="button" onclick="setObject('▒', 'box')" id="box"><img src="./img/tiles/box.png"></button>
+            <button class="button" onclick="setObject('x', 'end')" id="end"><img class="invert smooth" src="./img/tiles/end.png"></button>
+            <button class="button" onclick="setObject('P', 'player')" id="player"><img class="invert smooth" src="./img/tiles/player.png"></button>
+
+            <div class="gap"></div>
+
+            <button class="button" onclick="toggleEraser()" id="eraser"><img src="./img/menu/eraser.png"></button>
+            <button class="button" onclick="resize()" id="eraser"><img src="./img/menu/resize.png"></button>
+
+            <div class="gap"></div>
+
+            <button class="button" onclick="importRoom()"><img src="./img/menu/export.png"></button>
+            <button class="button" onclick="exportRoom()"><img src="./img/menu/import.png"></button>
+        </div>
+    </div>
+
+    <div class="editor" id="editor"></div>
+
+    <script src="./js/p5.min.js"></script>
+    <script src="./js/script.js"></script>
+
+</body>
+</html>

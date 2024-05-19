@@ -1,0 +1,152 @@
+@font-face {
+    font-family: "pixel";
+    src: url("../font/font.ttf") format("truetype");
+}
+
+body {
+    margin: 0;
+    font-family: "pixel";
+    background-size: cover;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    background-image: url("../img/editor.png");
+}
+
+.frosted {
+    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.nav {
+    top: 0;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+    width: 100%;
+    padding: 7px;
+    position: fixed;
+    list-style-type: none;
+}
+
+.nav li {
+    float: left;
+}
+
+.nav li a {
+    color: white;
+    display: block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.nav li a:hover:not(.active) {
+    background-color: #111;
+}
+
+.nav .active {
+    background-color: #04AA6D;
+}
+
+.editor {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.editor canvas {
+    border: solid 4px #232c45;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button {
+    border: none;
+    border-radius: 1rem;
+    border: solid 4px #ffffff;
+    background-color: #ffffff;
+    box-shadow: 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+.button img {
+    width: 40px;
+    height: 40px;
+    padding: 0.25rem;
+}
+
+.button:hover {
+    border-color: #ac3435;
+}
+
+.selected {
+    background-color: rgba(31, 26, 26, 0.5);
+    border: solid 4px rgba(84, 77, 104, 0.5);
+}
+
+.smooth {
+    image-rendering: auto;
+}
+
+.invert {
+    filter: invert();
+}
+
+.gap {
+    display: block;
+    width: 25px;
+}
+
+@media (max-width: 1320px) {
+    .button img {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .button img {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media (max-width: 520px) {
+    .button img {
+        width: 15px;
+        height: 15px;
+    }
+}
+
+@media (max-width: 460px) {
+    .button img {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    .button {
+        border: none;
+    }
+
+    .button img {
+        padding: 0.25rem;
+    }
+}
+
+@media (max-width: 592px) {
+    .gap {
+        width: 10px;
+    }
+}
+
+@media (max-width: 375px) {
+    .gap {
+        width: 5px;
+    }
+}
