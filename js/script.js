@@ -93,7 +93,7 @@ function resize() {
     const width = Number(window.prompt("What width do you want? "));
     const height = Number(window.prompt("What width do you want? "));
 
-    grid = Array.from({ length: width }, () => Array(height).fill(" "));
+    grid = Array.from({ length: height }, () => Array(width).fill(" "));
 
     resizeCanvas(width * 48 || 912, height * 48 || 240, true);
 }
