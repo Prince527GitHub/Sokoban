@@ -92,8 +92,12 @@ function toggleEraser() {
 function resize() {
     const width = Number(window.prompt("What width do you want? "));
     const height = Number(window.prompt("What width do you want? "));
+    
+    if (width > 25) return window.alert("The width cant be bigger then 25");
 
-    grid = Array.from({ length: height }, () => Array(width).fill(" "));
+    if (height > 10) return window.alert("The height cant be bigger then 10");
+
+    grid = Array.from({ length: width }, () => Array(height).fill(" "));
 
     resizeCanvas(width * 48 || 912, height * 48 || 240, true);
 }
