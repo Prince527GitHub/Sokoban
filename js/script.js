@@ -90,12 +90,12 @@ function toggleEraser() {
 }
 
 function resize() {
-    const width = Number(window.prompt("What width do you want? "));
-    const height = Number(window.prompt("What width do you want? "));
-    
-    if (width > 25) return window.alert("The width cant be bigger then 25");
+    const width = Number(window.prompt("What width do you want?"));
+    const height = Number(window.prompt("What width do you want?"));
 
-    if (height > 10) return window.alert("The height cant be bigger then 10");
+    if (!width || !height) return window.alert("You must set a number for both.")
+
+    if (width > 25 || height > 10) return window.alert("The size cant be more then 25x10.");
 
     grid = Array.from({ length: width }, () => Array(height).fill(" "));
 
