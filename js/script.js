@@ -4,6 +4,11 @@ let selected = "█";
 let selectedElement = "wall";
 let tileImages = {};
 
+const lang = new URL(window.location.href).searchParams.get("lang") || "en";
+console.log(lang);
+
+document.getElementById("title").innerHTML = lang == "fr" ? "Éditeur de niveau" : "Level Editor"
+
 const tiles = [
     {
         "object": "█",
@@ -90,12 +95,12 @@ function toggleEraser() {
 }
 
 function resize() {
-    const width = Number(window.prompt("What width do you want?"));
-    const height = Number(window.prompt("What width do you want?"));
+    const width = Number(window.prompt(lang == "fr" ? "Quelle largeur souhaitez-vous?" : "What width do you want?"));
+    const height = Number(window.prompt(lang == "fr" ? "Quelle hauteur souhaitez-vous?" : "What height do you want?"));
 
-    if (!width || !height) return window.alert("You must set a number for both.")
+    if (!width || !height) return window.alert(lang == "fr" ? "Vous devez définir un numéro pour les deux." : "You must set a number for both.")
 
-    if (width > 25 || height > 10) return window.alert("The size cant be more then 25x10.");
+    if (width > 25 || height > 10) return window.alert(lang == "fr" ? "La taille ne peut être supérieure à 25x10." : "The size cant be more then 25x10.");
 
     grid = Array.from({ length: width }, () => Array(height).fill(" "));
 
@@ -122,7 +127,7 @@ async function importRoom() {
 
         processData(clipboard);
     } catch(err) {
-        const level = window.prompt("Please enter the data:");
+        const level = window.prompt(lang == "fr" ? "Veuillez saisir les données:" : "Please enter the data:");
 
         processData(level);
     }
@@ -131,7 +136,7 @@ async function importRoom() {
 function processData(clipboardData) {
     grid = decodeArray(JSON.parse(atob(clipboardData)));
 
-    console.log("Data imported successfully.");
+    console.log(lang == "fr" ? "Les données ont été importées avec succès." : "Data imported successfully.");
 }
 
 function exportRoom() {
