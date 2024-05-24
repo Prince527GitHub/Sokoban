@@ -136,6 +136,8 @@ async function importRoom() {
 function processData(clipboardData) {
     grid = decodeArray(JSON.parse(atob(clipboardData)));
 
+    resizeCanvas(grid[0].length * 48 || 912, grid.length * 48 || 240, true);
+
     console.log(lang == "fr" ? "Les données ont été importées avec succès." : "Data imported successfully.");
 }
 
