@@ -102,7 +102,7 @@ function resize() {
 
     if (width > 25 || height > 10) return window.alert(lang == "fr" ? "La taille ne peut être supérieure à 25x10." : "The size cant be more then 25x10.");
 
-    grid = Array.from({ length: width }, () => Array(height).fill(" "));
+    grid = Array.from({ length: height }, () => Array(width).fill(" "));
 
     resizeCanvas(width * 48 || 912, height * 48 || 240, true);
 }
