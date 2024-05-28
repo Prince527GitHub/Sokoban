@@ -23,12 +23,35 @@ def fgRed(string):
 def fgRGB(string, r = 0, g = 0, b = 0):
     return f"\x1b[38;2;{r};{g};{b}m{string}\x1b[0m"
 
+# Texte en gras
+def bold(string):
+    return f"\u001b[1m{string}\u001b[22m"
+
 # Fonction pour effacer l'écran
 def clear():
     if os.name == "nt":
         os.system("cls")
     else:
         os.system("clear")
+
+def prompt(lang):
+    # Demander si l'utilisateur est certain
+    confirm = input("Are you sure you want to proceed? (y/n): " if lang == "en" else "Êtes-vous sûr de vouloir continuer? (y/n): ").lower()
+
+    try:
+        confirm = confirm[0]
+    except:
+        confirm = None
+
+    # Si l'utilisateur est certain retourner True si non False et si c'est quelque chose autre retourner un message et redémarrer la fonction
+    if confirm == "y":
+        return True
+    elif confirm == "n":
+        return False
+    else:
+        print(fgRed("That is not valid, we only accept \"y\" or \"n\"" if lang == "en" else "Ce n'est pas valable, nous n'acceptons que les mots \"y\" ou \"n\""))
+
+        return prompt(lang)
 
 # Fonction permettant de recueillir les données de l'utilisateur 
 def getInput(message):
@@ -48,7 +71,7 @@ def getInput(message):
         finally:
             termios.tcsetattr(terminal, termios.TCSADRAIN, settings)
 
-    return char
+    return char.lower()
 
 # Fonction pour afficher l'état du jeu
 def show(array, text = ""):
@@ -99,6 +122,32 @@ def checkForWin(level, default):
 
     return completed == total
 
+# Fonction pour voir si le jeux est impossible
+def checkForFail(level, default, lang):
+    message = ""
+
+    for x in range(len(level)):
+        for y in range(len(level[x])):
+            if level[x][y] == "▒" and default[x][y] != "x":
+                number = 0
+
+                if level[x + 1][y] == "█":
+                    number += 1
+
+                if level[x - 1][y] == "█":
+                    number += 1
+
+                if level[x][y + 1] == "█":
+                    number += 1
+
+                if level[x][y - 1] == "█":
+                    number += 1
+
+                if number >= 2:
+                    message = f" / This level {bold('may be impossible')} to restart press \"r\"" if lang == "en" else f" / Ce niveau {bold('peut être impossible')} à redémarrer appuyez sur \"r\""
+
+    return message
+
 # Fonction pour ajouter un niveau
 def add(levels, lang):
     # Effacer l'écran
@@ -109,13 +158,18 @@ def add(levels, lang):
     level = input("Paste level code? " if lang == "en" else "Coller le code de niveau? ")
 
     # Retourner au menu si l'utilisateur tape "q"
-    if level == "q":
-        print("Returning to level select menu..." if lang == "en" else "Retour au menu de sélection de niveau...")
+    if level.lower() == "q":
+        confirm = prompt(lang)
 
-        # Attendre 1,5 seconde
-        time.sleep(1.5)
+        if confirm == True:
+            print("Returning to level select menu..." if lang == "en" else "Retour au menu de sélection de niveau...")
 
-        return menu(levels, lang)
+            # Attendre 1,5 seconde
+            time.sleep(1.5)
+
+            return menu(levels, lang)
+        else:
+            return add(levels, lang)
 
     try:
         # Décoder la chaîne base64 puis l'analyser en json
@@ -126,7 +180,7 @@ def add(levels, lang):
         # Attendre 1,5 seconde
         time.sleep(1.5)
 
-        return add(levels)
+        return add(levels, lang)
 
     # si le niveau est décodé ajouter le au array
     levels.append(object)
@@ -143,8 +197,10 @@ def add(levels, lang):
 def game(level, default, lang, moves = 0):
     moved = False
 
+    message = (f"Moves: {moves}" if lang == "en" else f"Mouvements: {moves}") + checkForFail(level, default, lang)
+
     # Afficher l'état du niveau avec le nombre de mouvements
-    show(level, f"Moves: {moves}" if lang == "en" else f"Mouvements: {moves}")
+    show(level, message)
 
     # Obtenir le input de l'utilisateur
     direction = getInput("Where do you want to go? " if lang == "en" else "Où voulez-vous aller? ")
@@ -156,20 +212,26 @@ def game(level, default, lang, moves = 0):
         direction = None
 
     if direction == "r":
-        # Remettre le niveau au défaut
-        level = deepcopy(default)
+        confirm = prompt(lang)
+
+        if confirm == True:
+            # Remettre le niveau au défaut
+            level = deepcopy(default)
 
     elif direction == "q":
         # Afficher l'état du niveau avec le nombre de mouvements
-        show(level, f"Moves: {moves}" if lang == "en" else f"Mouvements: {moves}")
+        show(level, message)
 
-        print("Returning to level select menu..." if lang == "en" else "Retour au menu de sélection de niveau...")
+        confirm = prompt(lang)
 
-        # Attendre 1,5 seconde
-        time.sleep(1.5)
+        if (confirm == True):
+            print("Returning to level select menu..." if lang == "en" else "Retour au menu de sélection de niveau...")
 
-        # Retourner au menu avec False car l'utilisateur n'a pas gagné
-        return False
+            # Attendre 1,5 seconde
+            time.sleep(1.5)
+
+            # Retourner au menu avec False car l'utilisateur n'a pas gagné
+            return False
 
     # Boucles for pour parcourir le niveau
     for x in range(len(level)):
@@ -287,7 +349,7 @@ def game(level, default, lang, moves = 0):
 
     if (win == True):
         # Afficher l'état du niveau avec le nombre de mouvements
-        show(level, f"Moves: {moves}" if lang == "en" else f"Mouvements: {moves}")
+        show(level, )
 
         print(fgGreen("You win!" if lang == "en" else "Vous avez gagné!"))
 
@@ -305,9 +367,8 @@ def menu(levels, lang, completed = []):
     # Effacer l'écran
     clear()
 
-    # Si l'utilisateur n'a pas complété aucun niveau, afficher les contrôles
-    if len(completed) == 0:
-        print(f"{fgRGB('Controls', 0, 0, 255)}\n> \"w\" \"a\" \"s\" \"d\" to move\n> \"q\" to exit/return to menu\n> \"1-{len(levels)}\" to select the level\n> \"a\" to add a custom level\n" if lang == "en" else f"{fgRGB('Contrôles', 0, 0, 255)}\n> « w » « a » « s » « d » pour se déplacer\n> « q » pour quitter/retourner au menu\n> « 1-4 » pour sélectionner le niveau\n> « a » pour ajouter un niveau personnalisé\n")
+    # Afficher les contrôles
+    print(f"{fgRGB('Controls', 0, 0, 255)}\n> \"w\" \"a\" \"s\" \"d\" to move\n> \"q\" to exit/return to menu\n> \"1-{len(levels)}\" to select the level\n> \"a\" to add a custom level\n" if lang == "en" else f"{fgRGB('Contrôles', 0, 0, 255)}\n> « w » « a » « s » « d » pour se déplacer\n> « q » pour quitter/retourner au menu\n> « 1-{len(levels)} » pour sélectionner le niveau\n> « a » pour ajouter un niveau personnalisé\n")
 
     buttons = [[], [], []]
 
@@ -335,10 +396,13 @@ def menu(levels, lang, completed = []):
     for i in range(len(buttons)):
         print(" ".join(buttons[i]))
 
-    selection = input("What level do you want to play? " if lang == "en" else "Quel niveau voulez-vous jouer? ")
+    selection = input("What level do you want to play? " if lang == "en" else "Quel niveau voulez-vous jouer? ").lower()
 
     if selection == "q":
-        exit()
+        confirm = prompt(lang)
+
+        if confirm == True:
+            return exit()
     elif selection == "a":
         return add(levels, lang)
 
@@ -406,7 +470,7 @@ def language():
 
     print(f"{fgRGB('Language/langue', 0, 0, 255)}\n> \"en\" => \"English\"\n> \"fr\" => \"Français\"\n")
 
-    lang = input("Select a language/Sélectionner une langue: ")
+    lang = input("Select a language/Sélectionner une langue: ").lower()
 
     if lang == "q":
         return exit()
